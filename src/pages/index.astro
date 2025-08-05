@@ -3,47 +3,83 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const greetings = [
+    { emoji: "🧑‍🚀", phrase: "Weltveränderer" },
+    { emoji: "🧑‍💻", phrase: "Magier" },
+    { emoji: "🧑‍🎨", phrase: "Kreative Seele" },
+    { emoji: "🧑‍🔬", phrase: "Innovator" },
+    { emoji: "🧑‍🍳", phrase: "Freudebringer" },
+    { emoji: "🧑‍🏫", phrase: "Wissenssucher" },
+    { emoji: "🧑‍🚒", phrase: "Held" },
+    { emoji: "🧑‍⚕️", phrase: "Lebensretter" },
+    { emoji: "🧑‍✈️", phrase: "Träumender" },
+    { emoji: "🧑‍🌾", phrase: "Wachstumsbringer" }
+];
+
+const randomIndex = Math.floor(Math.random() * greetings.length);
+const { emoji, phrase } = greetings[randomIndex];
 ---
 
 <!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+<html lang="de">
+<head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+        .wave {
+            display: inline-block;
+            animation: wave 1.8s infinite;
+            transform-origin: 70% 70%;
+        }
+        @keyframes wave {
+            0%, 60%, 100% { transform: rotate(0deg); }
+            10%, 30% { transform: rotate(18deg); }
+            20% { transform: rotate(-8deg); }
+            40% { transform: rotate(4deg); }
+            50% { transform: rotate(-4deg); }
+        }
+        .highlight {
+            background: linear-gradient(90deg, #ffe082 40%, #ffd54f 100%);
+            border-radius: 0.4em;
+            padding: 0.1em 0.4em;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+<Header />
+<main>
+    <h1>{emoji} Hallo, {phrase}!</h1>
+    <div class="fade-in" style="animation-delay:0.2s; animation-fill-mode:both;">
+        <p class="fade-in">
+            <span class="wave" aria-label="Winken">👋</span>
+            Schön, dass du hier bist!
+        </p>
+        <p>
+            <span>Willkommen auf meinem Blog</span> über mein Auslandssemester in <b>Taiwan 2025/2026</b>!
+            Ich werde an der <a href="https://nthu-en.site.nthu.edu.tw/" target="_blank" rel="noopener">National Tsing Hua University (NTHU)</a> in Hsinchu <b>Informatik</b> studieren.
+        </p>
+        <p>
+            Hier möchte ich einige Einblicke in das Leben und Studieren in Taiwan, von <b>Abenteuern</b> über <b>kulturelle Entdeckungen</b> bis hin zu meinem <b>Uni-Alltag</b> geben.
+        </p>
+        <p>
+            Du möchtest mehr über mich erfahren? Dann schau gerne auf meiner <a href="/about">Über mich</a> Seite vorbei!
+        </p>
+        <p>
+            Ob ich ein guter Autor bin? Naja, dass wird die Zukunft zeigen. <br>
+            Viel Spaß beim Lesen und Mitreisen!
+        </p>
+    </div>
+</main>
+<Footer />
+</body>
 </html>
