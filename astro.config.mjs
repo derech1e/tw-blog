@@ -5,13 +5,21 @@ import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 
 import vercel from '@astrojs/vercel';
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import {autolinkConfig} from "./src/plugins/rehype-autolink-config.js";
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://example.com',
   integrations: [mdx(), sitemap()],
+  markdown: {
+    rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, autolinkConfig]],
+  },
   adapter: vercel({
     edgeMiddleware: true,
+    imageService: true,
+    devImageService: 'sharp',
     webAnalytics: {
       enabled: true,
     },

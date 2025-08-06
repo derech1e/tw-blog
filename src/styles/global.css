@@ -30,6 +30,9 @@
 	font-style: normal;
 	font-display: swap;
 }
+html {
+	scroll-behavior: smooth;
+}
 body {
 	font-family: "Atkinson", sans-serif;
 	margin: 0;
@@ -152,4 +155,17 @@ hr {
 	clip-path: inset(50%);
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
+}
+
+/* ===== anchor link ===== */
+.anchor-link {
+	margin-left: 0.5 rem;
+	color: rgb(255, 107, 1);
+}
+
+/* Optional: respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	html:focus-within {
+		scroll-behavior: auto;
+	}
 }
