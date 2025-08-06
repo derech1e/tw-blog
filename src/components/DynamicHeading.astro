@@ -1,0 +1,21 @@
+---
+const greetings = [
+{ emoji: "🧑‍🚀", phrase: "Weltveränderer" },
+{ emoji: "🧑‍💻", phrase: "Magier" },
+{ emoji: "🧑‍🎨", phrase: "Kreative Seele" },
+{ emoji: "🧑‍🔬", phrase: "Innovator" },
+{ emoji: "🧑‍🍳", phrase: "Freudebringer" },
+{ emoji: "🧑‍🏫", phrase: "Wissenssucher" },
+{ emoji: "🧑‍🚒", phrase: "Held" },
+{ emoji: "🧑‍⚕️", phrase: "Lebensretter" },
+{ emoji: "🧑‍✈️", phrase: "Träumender" },
+{ emoji: "🧑‍🌾", phrase: "Wachstumsbringer" }
+];
+
+const randomIndex = Math.floor(Math.random() * greetings.length);
+const { emoji, phrase } = greetings[randomIndex];
+export const prerender = false;
+---
+
+
+<h1>{emoji} Hallo, {phrase}!</h1>

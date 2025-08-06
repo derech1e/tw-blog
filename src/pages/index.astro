@@ -3,23 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-
-const greetings = [
-    { emoji: "🧑‍🚀", phrase: "Weltveränderer" },
-    { emoji: "🧑‍💻", phrase: "Magier" },
-    { emoji: "🧑‍🎨", phrase: "Kreative Seele" },
-    { emoji: "🧑‍🔬", phrase: "Innovator" },
-    { emoji: "🧑‍🍳", phrase: "Freudebringer" },
-    { emoji: "🧑‍🏫", phrase: "Wissenssucher" },
-    { emoji: "🧑‍🚒", phrase: "Held" },
-    { emoji: "🧑‍⚕️", phrase: "Lebensretter" },
-    { emoji: "🧑‍✈️", phrase: "Träumender" },
-    { emoji: "🧑‍🌾", phrase: "Wachstumsbringer" }
-];
-
-const randomIndex = Math.floor(Math.random() * greetings.length);
-const { emoji, phrase } = greetings[randomIndex];
-export const prerender = false;
+import DynamicHeading from "../components/DynamicHeading.astro";
 ---
 
 <!doctype html>
@@ -59,7 +43,7 @@ export const prerender = false;
 <body>
 <Header />
 <main>
-    <h1>{emoji} Hallo, {phrase}!</h1>
+    <DynamicHeading />
     <div class="fade-in" style="animation-delay:0.2s; animation-fill-mode:both;">
         <p class="fade-in">
             <span class="wave" aria-label="Winken">👋</span>
