@@ -1,0 +1,67 @@
+---
+// src/components/media/CompareSlider.astro
+interface Props {
+    before: { src: string; alt: string };
+    after: { src: string; alt: string };
+    height?: number; // px
+    rounded?: boolean;
+}
+const { before, after, height = 360, rounded = true } = Astro.props;
+---
+
+<div
+        class={`relative not-prose ${rounded ? "rounded-xl overflow-hidden" : ""}`}
+        style={`height:${height}px;`}
+>
+    <img
+            src={before.src}
+            alt={before.alt}
+            class="absolute inset-0 h-full w-full object-cover"
+    />
+    <img
+            src={after.src}
+            alt={after.alt}
+            class="absolute inset-0 h-full w-full object-cover clip-after"
+    />
+    <input
+            type="range"
+            min="0"
+            max="100"
+            value="50"
+            class="absolute bottom-3 left-1/2 -translate-x-1/2 w-2/3 slider"
+            aria-label="Compare images"
+    />
+</div>
+
+<style>
+    .clip-after {
+        clip-path: inset(0 0 0 50%);
+        transition: clip-path 0.05s linear;
+    }
+    .slider {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 999px;
+    }
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        background: white;
+        border-radius: 999px;
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+<script client:load>
+    const root = document.currentScript?.parentElement;
+    const after = root.querySelector(".clip-after");
+    const input = root.querySelector('input[type="range"]');
+    input.addEventListener("input", () => {
+        const v = input.valueAsNumber;
+        after.style.clipPath = `inset(0 0 0 ${v}%)`;
+    });
+</script>

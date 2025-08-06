@@ -1,0 +1,63 @@
+---
+// src/components/effects/GlowCard.astro
+interface Props {
+    as?: "div" | "section" | "article";
+    intensity?: number; // 0.2–0.9
+    radius?: number; // px
+    class?: string;
+    title?: string;
+}
+const { as = "div", intensity = 0.5, radius = 220, class: cls, title } =
+    Astro.props;
+---
+
+<div
+class={`relative overflow-hidden rounded-2xl border border-slate-200 bg-white/70 backdrop-blur-sm ${cls}`}
+data-intensity={intensity}
+data-radius={radius}
+>
+<div class="pointer-events-none absolute inset-0">
+    <div class="glow" />
+</div>
+{title && (
+<div class="px-5 pt-4 pb-2 font-semibold tracking-tight">{title}</div>
+    )}
+<div class={`p-5 ${title ? "pt-0" : ""}`}>
+    <slot />
+</div>
+</div>
+
+<style>
+    .glow {
+        position: absolute;
+        inset: -20%;
+        background: radial-gradient(
+                circle at var(--gx, 50%) var(--gy, 0%),
+                rgba(56, 189, 248, 0.18),
+                rgba(56, 189, 248, 0) 45%
+        );
+        transition: background-position 0.08s ease;
+    }
+</style>
+
+<script client:load>
+    const el = document.currentScript?.parentElement;
+    if (!el) return;
+
+    const radius = Number(el.dataset.radius || 220);
+    const intensity = Number(el.dataset.intensity || 0.5);
+
+    const onMove = (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        el.style.setProperty("--gx", `${x}%`);
+        el.style.setProperty("--gy", `${y}%`);
+    };
+
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerleave", () => {
+        el.style.setProperty("--gx", "50%");
+        el.style.setProperty("--gy", "0%");
+    });
+</script>

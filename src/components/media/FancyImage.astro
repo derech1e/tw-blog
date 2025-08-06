@@ -1,0 +1,70 @@
+---
+// src/components/media/FancyImage.astro
+import { Image } from "astro:assets";
+
+interface Props {
+    src: any; // Astro image import or URL string
+    alt: string;
+    caption?: string;
+    aspect?: "16/9" | "4/3" | "1/1" | "auto";
+    rounded?: boolean;
+    shadow?: boolean;
+    width?: number;
+    height?: number;
+    loading?: "lazy" | "eager";
+    fit?: "cover" | "contain";
+}
+
+const {
+    src,
+    alt,
+    caption,
+    aspect = "auto",
+    rounded = true,
+    shadow = true,
+    width,
+    height,
+    loading = "lazy",
+    fit = "cover",
+} = Astro.props;
+
+const ratio =
+    aspect === "auto"
+        ? undefined
+        : aspect.split("/").map((n) => Number(n)) as [number, number];
+---
+
+<figure class="not-prose my-6">
+    <div
+            class={`relative overflow-hidden ${
+                rounded ? "rounded-xl" : ""
+            } ${shadow ? "shadow-lg" : ""} bg-slate-100`}
+            style={ratio ? `aspect-ratio: ${ratio[0]} / ${ratio[1]};` : ""}
+    >
+        {typeof src === "string" ? (
+                <img
+                        src={src}
+                        alt={alt}
+                        loading={loading}
+                        class="size-full object-cover"
+                        style={`object-fit:${fit};`}
+                />
+        ) : (
+                <Image
+                        src={src}
+                        alt={alt}
+                        width={width}
+                        height={height}
+                        loading={loading}
+                        class="size-full object-cover"
+                        style={`object-fit:${fit};`}
+                />
+        )}
+        <div class="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5"></div>
+    </div>
+    {caption && (
+            <figcaption class="mt-2 text-center text-sm text-slate-600">
+                {caption}
+            </figcaption>
+    )}
+</figure>

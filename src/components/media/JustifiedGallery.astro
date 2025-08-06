@@ -1,0 +1,145 @@
+---
+import { Image } from "astro:assets";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
+
+export interface Props {
+    /**
+     * Vite glob pattern relative to this component import context.
+     * Example: "../images/*.{jpg,jpeg,png,webp}"
+     */
+    glob: string;
+
+    /**
+     * Max number of eager images; others will be lazy.
+     */
+    eagerCount?: number;
+
+    /**
+     * Minimum row height clamp.
+     */
+    minHeight?: string; // e.g. "clamp(200px, 20vw, 420px)"
+
+    /**
+     * Fancybox group name so multiple galleries can coexist.
+     */
+    group?: string;
+
+    /**
+     * Whether to use <Image> transform to format=webp
+     */
+    format?: "webp" | "avif" | "png" | "jpeg" | "original";
+}
+
+const {
+    glob,
+    eagerCount = 16,
+    minHeight = "clamp(200px, 20vw, 400px)",
+    group = "gallery",
+    format = "webp",
+} = Astro.props;
+
+const modules = import.meta.glob<{ default: ImageMetadata }>(glob);
+const entries = Object.entries(modules);
+
+// sort by filename for stable order
+entries.sort(([a], [b]) => a.localeCompare(b));
+---
+
+<section class="justified-gallery" aria-label="Photo gallery">
+    {
+        entries.map(async ([path, loader], index) => {
+            const { default: data } = await loader();
+            const href = data.src;
+            const eager = index < eagerCount ? "eager" : "lazy";
+
+            return (
+                    <a
+                            style={`--width:${data.width}; --height:${data.height};`}
+                            href={href}
+                            target="_blank"
+                            rel="noreferrer"
+                            data-fancybox={group}
+                    >
+                        <Image
+                                format={format === "original" ? undefined : format}
+                                src={data}
+                                alt=""
+                                height={400}
+                                loading={eager}
+                        />
+                    </a>
+            );
+        })
+    }
+</section>
+
+<script client:load>
+    import { Fancybox } from "@fancyapps/ui/dist/fancybox/";
+
+    Fancybox.bind(`[data-fancybox="${"{group}"}"]`, {
+        theme: "auto",
+        mainClass: "blog-fancybox",
+        trapFocus: true,
+        idle: false,
+        Carousel: {
+            transition: "slide",
+        },
+        Toolbar: {
+            display: {
+                left: [],
+                middle: [],
+                right: ["close"],
+            },
+        },
+        Thumbs: false,
+    });
+</script>
+
+<style>
+    .justified-gallery {
+        --padding: max(2.5vw, 12px);
+        --space: max(2.5vw, 12px);
+        --min-height: var(--jg-min-height, clamp(200px, 20vw, 400px));
+
+        padding: var(--padding);
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space);
+    }
+    .justified-gallery a {
+        flex-grow: calc(var(--width) * (100000 / var(--height)));
+        flex-basis: calc(var(--min-height) * (var(--width) / var(--height)));
+        aspect-ratio: var(--width) / var(--height);
+        overflow: hidden;
+        transition: transform 0.08s ease-in-out, opacity 0.2s ease-in-out;
+        border-radius: 12px;
+        background: #f1f5f9;
+    }
+    .justified-gallery a img {
+        display: block;
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+        transform: scale(1.001);
+    }
+    .justified-gallery a:focus-visible {
+        outline: 3px solid color-mix(in oklab, canvasText 30%, transparent);
+        outline-offset: 2px;
+        transform: scale(1.02);
+        z-index: 1;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+    .justified-gallery::after {
+        content: "";
+        flex-grow: 1000000;
+    }
+
+    /* Optional darken when Fancybox is open (uses overlay) */
+    .blog-fancybox .fancybox__container {
+        --f-button-width: 44px;
+        --f-button-height: 44px;
+        --f-button-border-radius: 50%;
+        --f-toolbar-padding: 16px;
+    }
+</style>

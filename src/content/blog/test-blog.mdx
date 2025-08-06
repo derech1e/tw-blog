@@ -1,0 +1,292 @@
+---
+title: "My Blog Post with Gallery"
+description: "Test"
+pubDate: "2025-01-01"
+---
+
+import FancyboxGallery from "../../components/FancyboxGallery.tsx";
+
+# My Amazing Photo Gallery
+
+Here's my awesome photo collection:
+
+<FancyboxGallery
+    client:load
+    images={[
+        {
+            src: "https://lipsum.app/id/60/1600x1200",
+            thumb: "https://lipsum.app/id/60/200x150",
+            alt: "Sample image #1"
+        },
+        {
+            src: "https://lipsum.app/id/61/1600x1200",
+            thumb: "https://lipsum.app/id/61/200x150",
+            alt: "Sample image #2"
+        },
+        {
+            src: "https://lipsum.app/id/62/1600x1200",
+            thumb: "https://lipsum.app/id/62/200x150",
+            alt: "Sample image #3"
+        }
+    ]}
+    galleryName="blog-gallery"
+    options={{
+        Toolbar: {
+            display: {
+                left: ["infobar"],
+                middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
+                right: ["slideshow", "thumbs", "close"]
+            }
+        }
+    }}
+/>
+
+More content here...
+
+import FancyboxSimple from "../../components/FancyboxSimple.tsx";
+
+<FancyboxSimple client:load galleryName="my-gallery">
+    <a data-fancybox="my-gallery" href="https://lipsum.app/id/60/1600x1200">
+        <img src="https://lipsum.app/id/60/200x150" alt="Sample image #1" />
+    </a>
+    <a data-fancybox="my-gallery" href="https://lipsum.app/id/61/1600x1200">
+        <img src="https://lipsum.app/id/61/200x150" alt="Sample image #2" />
+    </a>
+    <a data-fancybox="my-gallery" href="https://lipsum.app/id/62/1600x1200">
+        <img src="https://lipsum.app/id/62/200x150" alt="Sample image #3" />
+    </a>
+</FancyboxSimple>
+
+More content here...
+
+
+
+import FancyboxGridGallery from "../../components/FancyboxGridGallery.tsx";
+
+# My Custom Photo Grid
+
+<FancyboxGridGallery
+  client:load
+  rows={3}
+  cols={3}
+  gap="0.5rem"
+  minItemHeight="150px"
+  images={[
+    {
+      src: "https://lipsum.app/id/60/1600x1200",
+      thumb: "https://lipsum.app/id/60/400x300",
+      alt: "Hero image",
+      row: 1,
+      col: 1,
+      colSpan: 2  // Takes up 2 columns
+    },
+    {
+      src: "https://lipsum.app/id/61/1600x1200",
+      thumb: "https://lipsum.app/id/61/400x300",
+      alt: "Portrait",
+      row: 1,
+      col: 3,
+      rowSpan: 2  // Takes up 2 rows
+    },
+    {
+      src: "https://lipsum.app/id/62/1600x1200",
+      thumb: "https://lipsum.app/id/62/400x300",
+      alt: "Landscape",
+      row: 2,
+      col: 1
+    },
+    {
+      src: "https://lipsum.app/id/63/1600x1200",
+      thumb: "https://lipsum.app/id/63/400x300",
+      alt: "Square",
+      row: 2,
+      col: 2
+    },
+    {
+      src: "https://lipsum.app/id/64/1600x1200",
+      thumb: "https://lipsum.app/id/64/400x300",
+      alt: "Bottom wide",
+      row: 3,
+      col: 1,
+      colSpan: 3  // Takes up all 3 columns
+    }
+  ]}
+  galleryName="custom-grid"
+/>
+
+## 2
+
+<FancyboxGridGallery
+    client:load
+    rows={4}
+    cols={4}
+    gap="0.25rem"
+    minItemHeight="120px"
+    className="magazine-grid"
+    images={[
+        // Featured large image
+        {
+            src: "https://lipsum.app/id/70/1600x1200",
+            thumb: "https://lipsum.app/id/70/600x400",
+            alt: "Featured story",
+            row: 1,
+            col: 1,
+            rowSpan: 2,
+            colSpan: 2
+        },
+        // Top right images
+        {
+            src: "https://lipsum.app/id/71/1600x1200",
+            thumb: "https://lipsum.app/id/71/300x200",
+            alt: "Top news 1",
+            row: 1,
+            col: 3
+        },
+        {
+            src: "https://lipsum.app/id/72/1600x1200",
+            thumb: "https://lipsum.app/id/72/300x200",
+            alt: "Top news 2",
+            row: 1,
+            col: 4
+        },
+        // Second row right
+        {
+            src: "https://lipsum.app/id/73/1600x1200",
+            thumb: "https://lipsum.app/id/73/300x200",
+            alt: "Side story",
+            row: 2,
+            col: 3,
+            colSpan: 2
+        },
+        // Bottom row
+        {
+            src: "https://lipsum.app/id/74/1600x1200",
+            thumb: "https://lipsum.app/id/74/300x200",
+            alt: "Bottom 1",
+            row: 3,
+            col: 1
+        },
+        {
+            src: "https://lipsum.app/id/75/1600x1200",
+            thumb: "https://lipsum.app/id/75/300x200",
+            alt: "Bottom 2",
+            row: 3,
+            col: 2
+        },
+        // Final wide image
+        {
+            src: "https://lipsum.app/id/76/1600x1200",
+            thumb: "https://lipsum.app/id/76/600x200",
+            alt: "Footer image",
+            row: 4,
+            col: 1,
+            colSpan: 4
+        }
+    ]}
+    galleryName="magazine-layout"
+/>
+
+## 3
+
+<FancyboxGridGallery
+    client:load
+    rows={2}
+    cols={5}
+    gap="2px"
+    minItemHeight="180px"
+    images={[
+        { src: "https://lipsum.app/id/80/1600x1200", thumb: "https://lipsum.app/id/80/300x200", alt: "Photo 1", row: 1, col: 1 },
+        { src: "https://lipsum.app/id/81/1600x1200", thumb: "https://lipsum.app/id/81/300x200", alt: "Photo 2", row: 1, col: 2, colSpan: 2 },
+        { src: "https://lipsum.app/id/82/1600x1200", thumb: "https://lipsum.app/id/82/300x200", alt: "Photo 3", row: 1, col: 4 },
+        { src: "https://lipsum.app/id/83/1600x1200", thumb: "https://lipsum.app/id/83/300x200", alt: "Photo 4", row: 1, col: 5, rowSpan: 2 },
+        { src: "https://lipsum.app/id/84/1600x1200", thumb: "https://lipsum.app/id/84/300x200", alt: "Photo 5", row: 2, col: 1, colSpan: 3 },
+        { src: "https://lipsum.app/id/85/1600x1200", thumb: "https://lipsum.app/id/85/300x200", alt: "Photo 6", row: 2, col: 4 }
+    ]}
+    galleryName="mosaic"
+/>
+
+
+## Carousel
+
+import FancyboxAdvancedCarousel from "../../components/FancyboxAdvancedCarousel.tsx";
+
+# My Stunning Photo Carousel
+
+<FancyboxAdvancedCarousel
+    client:load
+    height="500px"
+    autoplayDelay={8000}
+    images={[
+        {
+            src: "https://lipsum.app/id/100/1920x1080",
+            thumb: "https://lipsum.app/id/100/800x450",
+            alt: "Beautiful landscape",
+            title: "Sunset Over Mountains"
+        },
+        {
+            src: "https://lipsum.app/id/101/1920x1080",
+            thumb: "https://lipsum.app/id/101/800x450",
+            alt: "City skyline",
+            title: "Urban Architecture"
+        },
+        {
+            src: "https://lipsum.app/id/102/1920x1080",
+            thumb: "https://lipsum.app/id/102/800x450",
+            alt: "Ocean waves",
+            title: "Coastal Beauty"
+        },
+        {
+            src: "https://lipsum.app/id/103/1920x1080",
+            thumb: "https://lipsum.app/id/103/800x450",
+            alt: "Forest path",
+            title: "Nature's Pathway"
+        },
+        {
+            src: "https://lipsum.app/id/104/1920x1080",
+            thumb: "https://lipsum.app/id/104/800x450",
+            alt: "Desert dunes",
+            title: "Golden Sands"
+        }
+    ]}
+    galleryName="hero-carousel"
+/>
+
+## 2
+
+
+<FancyboxAdvancedCarousel
+    client:load
+    height="600px"
+    autoplayDelay={12000}
+    className="portfolio-carousel"
+    images={[
+        {
+            src: "https://lipsum.app/id/110/1920x1280",
+            thumb: "https://lipsum.app/id/110/900x600",
+            alt: "Project Alpha",
+            title: "Web Application Design"
+        },
+        {
+            src: "https://lipsum.app/id/111/1920x1280",
+            thumb: "https://lipsum.app/id/111/900x600",
+            alt: "Project Beta",
+            title: "Mobile App Interface"
+        },
+        {
+            src: "https://lipsum.app/id/112/1920x1280",
+            thumb: "https://lipsum.app/id/112/900x600",
+            alt: "Project Gamma",
+            title: "Brand Identity System"
+        }
+    ]}
+    galleryName="portfolio"
+    options={{
+        Toolbar: {
+            display: {
+                left: ["infobar"],
+                middle: ["zoomIn", "zoomOut", "rotateCCW", "rotateCW"],
+                right: ["slideshow", "download", "close"]
+            }
+        }
+    }}
+/>

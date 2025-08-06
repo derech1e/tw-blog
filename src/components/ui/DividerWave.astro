@@ -1,0 +1,34 @@
+---
+// src/components/ui/DividerWave.astro
+interface Props {
+    flip?: boolean;
+    color?: string; // CSS color or currentColor
+    height?: number; // px
+    class?: string;
+}
+const { flip = false, color = "currentColor", height = 56, class: cls } =
+    Astro.props;
+---
+
+<div
+        class={`not-prose my-8 opacity-70 ${cls ?? ""}`}
+        style={`height:${height}px; color:${color};`}
+        aria-hidden="true"
+>
+    <svg
+            viewBox="0 0 1200 120"
+            preserveAspectRatio="none"
+            class={flip ? "rotate-180 size-full" : "size-full"}
+    >
+        <path
+                d="M0,0 C150,100 350,0 600,60 C850,120 1050,20 1200,80 L1200,0 L0,0 Z"
+                fill="currentColor"
+                opacity="0.15"
+        />
+        <path
+                d="M0,0 C200,80 400,0 600,40 C800,80 1000,0 1200,60 L1200,0 L0,0 Z"
+                fill="currentColor"
+                opacity="0.25"
+        />
+    </svg>
+</div>

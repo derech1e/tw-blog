@@ -1,0 +1,222 @@
+---
+import { Image } from "astro:assets";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
+import {ImageMetadata} from "astro";
+
+interface Props {
+    imagesGlob?: string;
+    images?: ImageMetadata[];
+    minHeight?: string;
+    padding?: string;
+    space?: string;
+    theme?: string;
+    enableArrows?: boolean;
+    enableToolbar?: boolean;
+    transition?: string;
+    class?: string;
+    galleryId?: string;
+}
+
+const {
+    imagesGlob = "../images/*.{jpg,jpeg,png,webp}",
+    images,
+    minHeight = "clamp(200px, 20vw, 400px)",
+    padding = "max(2.5vw, 12px)",
+    space = "max(2.5vw, 12px)",
+    theme = "auto",
+    enableArrows = false,
+    enableToolbar = true,
+    transition = "slide",
+    class: className = "",
+    galleryId = "gallery"
+} = Astro.props;
+
+// Use provided images or load from glob pattern
+const imageData = images ||
+    await Promise.all(
+        Object.entries(
+            import.meta.glob<{ default: ImageMetadata }>(imagesGlob)
+        ).map(async ([_, image]) => {
+            const { default: imageMetadata } = await image();
+            return imageMetadata;
+        })
+    );
+---
+
+<section
+        class={`image-carousel ${className}`}
+        id={galleryId}
+        style={`--min-height: ${minHeight}; --padding: ${padding}; --space: ${space};`}
+>
+    {
+        imageData.map(async (imageMetadata, index) => {
+            return (
+                    <a
+                            style={`--width: ${imageMetadata.width}; --height: ${imageMetadata.height};`}
+                            href={imageMetadata.src}
+                            target="_blank"
+                            data-fancybox={galleryId}
+                            data-caption={`Image ${index + 1} of ${imageData.length}`}
+                    >
+                        <Image
+                                format="webp"
+                                src={imageMetadata}
+                                alt={`Gallery image ${index + 1}`}
+                                height={400}
+                                loading={index < 20 ? "eager" : "lazy"}
+                        />
+                    </a>
+            );
+        })
+    }
+</section>
+
+<script define:vars={{ galleryId, theme, enableArrows, enableToolbar, transition }}>
+    import { Fancybox } from "@fancyapps/ui/dist/fancybox/";
+
+    // Initialize Fancybox with custom configuration
+    Fancybox.bind(`[data-fancybox="${galleryId}"]`, {
+        theme: theme,
+        mainStyle: {
+            "--f-button-width": "44px",
+            "--f-button-height": "44px",
+            "--f-button-border-radius": "50%",
+            "--f-toolbar-padding": "16px",
+        },
+        Carousel: {
+            Arrows: enableArrows,
+            Toolbar: {
+                display: {
+                    left: [],
+                    middle: [],
+                    right: enableToolbar ? ["close"] : [],
+                },
+            },
+            transition: transition,
+            infinite: true,
+        },
+        // Additional interactive features
+        on: {
+            init: (fancybox) => {
+                console.log(`Gallery ${galleryId} initialized with ${fancybox.items.length} images`);
+            },
+            reveal: (fancybox, slide) => {
+                // Add custom reveal animation or logic
+                slide.el.style.opacity = "0";
+                slide.el.animate([
+                    { opacity: 0, transform: "scale(0.8)" },
+                    { opacity: 1, transform: "scale(1)" }
+                ], {
+                    duration: 300,
+                    easing: "ease-out"
+                });
+            }
+        }
+    });
+</script>
+
+<style>
+    .image-carousel {
+        --padding: max(2.5vw, 12px);
+        --space: max(2.5vw, 12px);
+        --min-height: clamp(200px, 20vw, 400px);
+
+        padding: var(--padding);
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space);
+
+        a {
+            flex-grow: calc(var(--width) * (100000 / var(--height)));
+            flex-basis: calc(var(--min-height) * (var(--width) / var(--height)));
+            aspect-ratio: var(--width) / var(--height);
+            overflow: hidden;
+            opacity: 1;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+            position: relative;
+            cursor: pointer;
+
+            &::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                        45deg,
+                        transparent 49%,
+                        rgba(255, 255, 255, 0.1) 50%,
+                        transparent 51%
+                );
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            &:hover {
+                transform: scale(1.02) translateY(-4px);
+                box-shadow:
+                        0 10px 25px -5px rgba(0, 0, 0, 0.1),
+                        0 20px 40px -12px rgba(0, 0, 0, 0.25);
+                z-index: 2;
+
+                &::before {
+                    opacity: 1;
+                }
+
+                img {
+                    transform: scale(1.05);
+                }
+            }
+        }
+
+        img {
+            display: block;
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: inherit;
+        }
+
+        a:focus-visible {
+            outline: 3px solid var(--outline, #3b82f6);
+            outline-offset: 4px;
+            transform: scale(1.05) translateY(-4px);
+            z-index: 3;
+        }
+
+        a.hidden {
+            transition: opacity 0.4s ease-in-out;
+            opacity: 0;
+        }
+
+        /* Masonry-style layout completion */
+        &::after {
+            content: "";
+            flex-grow: 1000000000;
+        }
+    }
+
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+        .image-carousel a:hover {
+            box-shadow:
+                    0 10px 25px -5px rgba(0, 0, 0, 0.3),
+                    0 20px 40px -12px rgba(0, 0, 0, 0.5);
+        }
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+        .image-carousel {
+            --padding: 16px;
+            --space: 8px;
+            --min-height: 150px;
+
+            a:hover {
+                transform: scale(1.01) translateY(-2px);
+            }
+        }
+    }
+</style>

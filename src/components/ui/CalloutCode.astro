@@ -1,0 +1,24 @@
+---
+// src/components/ui/CalloutCode.astro
+interface Props {
+    label?: string;
+    lang?: string;
+}
+const { label = "Example", lang = "bash" } = Astro.props;
+---
+
+<div class="not-prose my-6 overflow-hidden rounded-xl border border-slate-200">
+    <div class="bg-slate-50 px-4 py-2 text-xs font-semibold tracking-wide text-slate-600">
+        {label}
+    </div>
+    <div class="grid md:grid-cols-2 gap-0">
+        <div class="p-4 prose prose-slate max-w-none">
+            <slot name="explain" />
+        </div>
+        <pre class="m-0 p-0 overflow-auto bg-[#0b1021] text-white text-sm leading-relaxed">
+      <code class={`language-${lang}`}>
+        <slot />
+      </code>
+    </pre>
+    </div>
+</div>

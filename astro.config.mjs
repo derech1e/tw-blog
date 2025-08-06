@@ -9,13 +9,19 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import {autolinkConfig} from "./src/plugins/rehype-autolink-config.js";
 
+import tailwindcss from '@tailwindcss/vite';
+
+import react from '@astrojs/react';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://example.com',
-  integrations: [mdx(), sitemap()],
+  integrations: [mdx(), sitemap(), react()],
+
   markdown: {
     rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, autolinkConfig]],
   },
+
   adapter: vercel({
     edgeMiddleware: true,
     imageService: true,
@@ -25,5 +31,10 @@ export default defineConfig({
     },
     maxDuration: 8
   }),
-  output: 'static'
+
+  output: 'static',
+
+  vite: {
+    plugins: [tailwindcss()]
+  }
 });

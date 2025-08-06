@@ -1,0 +1,79 @@
+---
+// src/components/ui/ProseBlock.astro
+interface Props {
+    title?: string;
+    variant?: "info" | "tip" | "warn" | "danger" | "note";
+    icon?: string; // fallback icons provided
+    compact?: boolean;
+}
+const {
+    title,
+    variant = "note",
+    icon,
+    compact = false,
+} = Astro.props;
+
+const VARIANTS = {
+    note: {
+        bg: "bg-slate-50",
+        border: "border-slate-200",
+        text: "text-slate-800",
+        ring: "ring-slate-100",
+        defaultIcon: "📝",
+    },
+    info: {
+        bg: "bg-blue-50",
+        border: "border-blue-200",
+        text: "text-blue-900",
+        ring: "ring-blue-100",
+        defaultIcon: "💡",
+    },
+    tip: {
+        bg: "bg-emerald-50",
+        border: "border-emerald-200",
+        text: "text-emerald-900",
+        ring: "ring-emerald-100",
+        defaultIcon: "✅",
+    },
+    warn: {
+        bg: "bg-amber-50",
+        border: "border-amber-200",
+        text: "text-amber-900",
+        ring: "ring-amber-100",
+        defaultIcon: "⚠️",
+    },
+    danger: {
+        bg: "bg-rose-50",
+        border: "border-rose-200",
+        text: "text-rose-900",
+        ring: "ring-rose-100",
+        defaultIcon: "🚨",
+    },
+} as const;
+
+const v = VARIANTS[variant];
+---
+
+<div
+        class={`not-prose ${v.bg} ${v.text} border ${v.border} rounded-xl p-4 ${
+            compact ? "py-3 px-4" : "p-5"
+        } shadow-sm ring-1 ${v.ring}`}
+>
+    <div class="flex items-start gap-3">
+        <div class="text-xl leading-none select-none">
+            {icon ?? v.defaultIcon}
+        </div>
+        <div class="min-w-0">
+            {title && (
+                    <div class="font-semibold mb-1 tracking-tight">{title}</div>
+            )}
+            <div class="prose prose-slate max-w-none">
+                <slot/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style is:global>
+    /* If not using Tailwind, you can replace classes with your CSS here */
+</style>

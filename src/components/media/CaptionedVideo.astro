@@ -1,0 +1,41 @@
+---
+// src/components/media/CaptionedVideo.astro
+interface Props {
+    src: string;
+    poster?: string;
+    caption?: string;
+    controls?: boolean;
+    loop?: boolean;
+    muted?: boolean;
+    autoPlay?: boolean;
+    rounded?: boolean;
+}
+const {
+    src,
+    poster,
+    caption,
+    controls = true,
+    loop = false,
+    muted = false,
+    autoPlay = false,
+    rounded = true,
+} = Astro.props;
+---
+
+<figure class="not-prose my-6">
+    <video
+            src={src}
+            poster={poster}
+            controls={controls}
+            loop={loop}
+            muted={muted}
+            autoplay={autoPlay}
+            playsinline
+            class={`w-full ${rounded ? "rounded-xl" : ""} shadow`}
+    />
+    {caption && (
+            <figcaption class="mt-2 text-center text-sm text-slate-600">
+                {caption}
+            </figcaption>
+    )}
+</figure>

@@ -1,0 +1,44 @@
+---
+// src/components/media/MasonryGallery.astro
+interface Props {
+    images: { src: string; alt: string; href?: string }[];
+    columns?: 2 | 3 | 4;
+    gap?: number; // px
+    rounded?: boolean;
+    hoverZoom?: boolean;
+}
+
+const { images, columns = 3, gap = 12, rounded = true, hoverZoom = true } =
+    Astro.props;
+---
+
+<div
+        class="not-prose"
+        style={`column-count:${columns}; column-gap:${gap}px;`}
+>
+    {images.map((img) => (
+            <a
+                    href={img.href || img.src}
+                    style={`break-inside: avoid; display:block; margin-bottom:${gap}px;`}
+            >
+                <img
+                        src={img.src}
+                        alt={img.alt}
+                        loading="lazy"
+                        class={`${rounded ? "rounded-xl" : ""} ${
+                            hoverZoom ? "masonry-zoom" : ""
+                        } w-full`}
+                />
+            </a>
+    ))}
+</div>
+
+<style>
+    .masonry-zoom {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .masonry-zoom:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+    }
+</style>

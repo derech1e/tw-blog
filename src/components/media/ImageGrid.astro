@@ -1,0 +1,467 @@
+---
+/* src/components/media/ImageGridPlus.astro */
+import { Image } from "astro:assets";
+
+type Span = "auto" | "wide" | "tall" | "big";
+interface GridItem {
+    src: any; // Astro image import or URL
+    alt: string;
+    caption?: string;
+    span?: Span;
+}
+interface CarouselItem {
+    src: any;
+    alt: string;
+    caption?: string;
+}
+interface Props {
+    items: GridItem[];
+    columns?: 2 | 3 | 4;
+    gap?: number; // rem
+    aspect?: "auto" | "1/1" | "4/3" | "16/9";
+    rounded?: boolean;
+    shadow?: boolean;
+
+    // Optional carousel
+    carouselItems?: CarouselItem[];
+    carouselHeight?: number; // px
+    carouselAutoplayMs?: number | null; // null disables autoplay
+}
+
+const {
+    items,
+    columns = 3,
+    gap = 0.75,
+    aspect = "auto",
+    rounded = true,
+    shadow = false,
+    carouselItems = [],
+    carouselHeight = 360,
+    carouselAutoplayMs = 4000,
+} = Astro.props;
+
+const colCls =
+    columns === 4
+        ? "grid-cols-2 md:grid-cols-4"
+        : columns === 2
+            ? "grid-cols-2"
+            : "grid-cols-2 md:grid-cols-3";
+
+const ratio =
+    aspect === "auto"
+        ? undefined
+        : (aspect.split("/").map((n) => Number(n)) as [number, number]);
+
+const figureBase =
+    "relative overflow-hidden " +
+    (rounded ? "rounded-xl " : "") +
+    (shadow ? "shadow-lg " : "") +
+    "bg-slate-100 cursor-zoom-in group";
+
+const lightboxList = [
+    ...carouselItems.map((ci) => ({ src: ci.src, alt: ci.alt, caption: ci.caption })),
+    ...items.map((gi) => ({ src: gi.src, alt: gi.alt, caption: gi.caption })),
+];
+---
+
+<div class="not-prose">
+    {carouselItems.length > 0 && (
+            <section class="mb-6">
+                <div
+                        class={`relative ${rounded ? "rounded-xl overflow-hidden" : ""} ${
+                            shadow ? "shadow-lg" : ""
+                        }`}
+                        style={`height:${carouselHeight}px;`}
+                        data-carousel
+                        data-autoplay={carouselAutoplayMs ?? ""}
+                >
+                    <div class="slides">
+                        {carouselItems.map((it, i) => (
+                                <figure
+                                        class="slide"
+                                        data-index={i}
+                                        on:click={() => {
+                                            /* handled in script; this is for clarity */
+                                        }}
+                                >
+                                    {typeof it.src === "string" ? (
+                                            <img
+                                                    src={it.src}
+                                                    alt={it.alt}
+                                                    class="h-full w-full object-cover"
+                                                    loading={i === 0 ? "eager" : "lazy"}
+                                            />
+                                    ) : (
+                                            <Image
+                                                    src={it.src}
+                                                    alt={it.alt}
+                                                    class="h-full w-full object-cover"
+                                                    loading={i === 0 ? "eager" : "lazy"}
+                                            />
+                                    )}
+                                    {it.caption && (
+                                            <figcaption
+                                                    class="absolute bottom-0 left-0 right-0 bg-black/40 text-white text-xs px-3 py-2 backdrop-blur-sm"
+                                                    aria-hidden="true"
+                                            >
+                                                {it.caption}
+                                            </figcaption>
+                                    )}
+                                </figure>
+                        ))}
+                    </div>
+                    <button class="nav prev" aria-label="Previous slide">‹</button>
+                    <button class="nav next" aria-label="Next slide">›</button>
+                    <div class="dots" aria-hidden="true">
+                        {carouselItems.map((_, i) => (
+                                <button class={`dot ${i === 0 ? "active" : ""}`} data-dot={i} />
+                        ))}
+                    </div>
+                </div>
+            </section>
+    )}
+
+    <div class={`grid ${colCls}`} style={`gap:${gap}rem;`}>
+        {items.map((it, idx) => {
+            const spanCls =
+                it.span === "big"
+                    ? "md:col-span-2 md:row-span-2"
+                    : it.span === "wide"
+                        ? "md:col-span-2"
+                        : it.span === "tall"
+                            ? "md:row-span-2"
+                            : "";
+            return (
+                    <figure
+                            class={`${figureBase} ${spanCls}`}
+                            style={ratio ? `aspect-ratio:${ratio[0]} / ${ratio[1]}` : ""}
+                            data-lightbox-index={carouselItems.length + idx}
+                    >
+                        {typeof it.src === "string" ? (
+                                <img
+                                        src={it.src}
+                                        alt={it.alt}
+                                        class="size-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                                        loading="lazy"
+                                />
+                        ) : (
+                                <Image
+                                        src={it.src}
+                                        alt={it.alt}
+                                        class="size-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                                        loading="lazy"
+                                />
+                        )}
+                        {it.caption && (
+                                <figcaption class="absolute bottom-0 left-0 right-0 bg-black/40 text-white text-xs px-2 py-1 backdrop-blur">
+                                    {it.caption}
+                                </figcaption>
+                        )}
+                        <div class="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/5 opacity-70"></div>
+                    </figure>
+            );
+        })}
+    </div>
+</div>
+
+<!-- Lightbox overlay -->
+<div class="lb fixed inset-0 z-50 hidden items-center justify-center">
+    <div class="lb-backdrop absolute inset-0 bg-black/70"></div>
+    <figure class="lb-content relative max-w-[95vw] max-h-[90vh]">
+        <img class="lb-img block max-h-[80vh] max-w-[95vw] object-contain" alt="" />
+        <figcaption class="lb-cap mt-2 text-center text-sm text-white/90"></figcaption>
+        <button class="lb-close" aria-label="Close">×</button>
+        <button class="lb-prev" aria-label="Previous">‹</button>
+        <button class="lb-next" aria-label="Next">›</button>
+    </figure>
+</div>
+
+<style>
+    .size-full {
+        width: 100%;
+        height: 100%;
+    }
+    /* Carousel */
+    [data-carousel] {
+        position: relative;
+        background: #f1f5f9;
+    }
+    .slides {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        transform: translateX(0%);
+        transition: transform 400ms ease;
+    }
+    .slide {
+        min-width: 100%;
+        height: 100%;
+        position: relative;
+        cursor: zoom-in;
+    }
+    .nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 40px;
+        width: 40px;
+        border-radius: 999px;
+        border: none;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.85);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+    }
+    .nav:hover {
+        background: white;
+    }
+    .prev {
+        left: 10px;
+    }
+    .next {
+        right: 10px;
+    }
+    .dots {
+        position: absolute;
+        left: 50%;
+        bottom: 10px;
+        translate: -50% 0;
+        display: flex;
+        gap: 6px;
+    }
+    .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.6);
+        border: none;
+        cursor: pointer;
+    }
+    .dot.active {
+        background: white;
+    }
+
+    /* Lightbox */
+    .lb {
+        display: none;
+    }
+    .lb.show {
+        display: flex;
+    }
+    .lb-backdrop {
+        backdrop-filter: blur(2px);
+    }
+    .lb-content {
+        z-index: 1;
+        color: white;
+    }
+    .lb-close,
+    .lb-prev,
+    .lb-next {
+        position: absolute;
+        top: 8px;
+        background: rgba(17, 24, 39, 0.6);
+        color: white;
+        border: none;
+        cursor: pointer;
+        height: 36px;
+        width: 36px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+    }
+    .lb-close {
+        right: -6px;
+        top: -6px;
+        font-size: 20px;
+    }
+    .lb-prev,
+    .lb-next {
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 24px;
+    }
+    .lb-prev {
+        left: -48px;
+    }
+    .lb-next {
+        right: -48px;
+    }
+
+    @media (max-width: 640px) {
+        .lb-prev {
+            left: 4px;
+        }
+        .lb-next {
+            right: 4px;
+        }
+    }
+</style>
+
+<script client:load>
+    // Utility to resolve Astro Image vs string
+    function resolveSrc(val) {
+        if (typeof val === "string") return val;
+        // Astro Image object exposes .src at runtime
+        return val?.src || "";
+    }
+
+    // Build lightbox sources from serialized data (SSR-safe approach: query DOM)
+    const lb = document.querySelector(".lb");
+    const lbImg = lb.querySelector(".lb-img");
+    const lbCap = lb.querySelector(".lb-cap");
+    const btnClose = lb.querySelector(".lb-close");
+    const btnPrev = lb.querySelector(".lb-prev");
+    const btnNext = lb.querySelector(".lb-next");
+
+    // Collect all sources in document order: carousel first then grid
+    const makeLightboxList = () => {
+        const list = [];
+        // Carousel
+        document
+            .querySelectorAll("[data-carousel] .slide img")
+            .forEach((img) => list.push({ src: img.currentSrc || img.src, alt: img.alt, caption: img.closest("figure")?.querySelector("figcaption")?.textContent || "" }));
+
+        // Grid
+        document.querySelectorAll("[data-lightbox-index]").forEach((fig) => {
+            const img = fig.querySelector("img");
+            list.push({
+                src: img.currentSrc || img.src,
+                alt: img.alt,
+                caption: fig.querySelector("figcaption")?.textContent || "",
+            });
+        });
+        return list;
+    };
+
+    let sources = makeLightboxList();
+    let current = 0;
+
+    function openAt(index) {
+        sources = makeLightboxList();
+        current = Math.max(0, Math.min(index, sources.length - 1));
+        render();
+        lb.classList.add("show");
+        document.documentElement.style.overflow = "hidden";
+    }
+    function closeLb() {
+        lb.classList.remove("show");
+        document.documentElement.style.overflow = "";
+    }
+    function prev() {
+        current = (current - 1 + sources.length) % sources.length;
+        render();
+    }
+    function next() {
+        current = (current + 1) % sources.length;
+        render();
+    }
+    function render() {
+        const it = sources[current];
+        lbImg.src = it.src;
+        lbImg.alt = it.alt;
+        lbCap.textContent = it.caption || "";
+    }
+
+    // Grid clicks
+    document.querySelectorAll("[data-lightbox-index]").forEach((fig) => {
+        fig.addEventListener("click", () => {
+            const idx = Number(fig.getAttribute("data-lightbox-index"));
+            openAt(idx);
+        });
+    });
+
+    // Carousel clicks
+    document.querySelectorAll("[data-carousel] .slide").forEach((slide, i) => {
+        slide.addEventListener("click", () => openAt(i));
+    });
+
+    // Overlay controls
+    btnClose.addEventListener("click", closeLb);
+    btnPrev.addEventListener("click", (e) => {
+        e.stopPropagation();
+        prev();
+    });
+    btnNext.addEventListener("click", (e) => {
+        e.stopPropagation();
+        next();
+    });
+    lb.addEventListener("click", (e) => {
+        if (e.target.classList.contains("lb-backdrop")) closeLb();
+    });
+    window.addEventListener("keydown", (e) => {
+        if (!lb.classList.contains("show")) return;
+        if (e.key === "Escape") closeLb();
+        if (e.key === "ArrowLeft") prev();
+        if (e.key === "ArrowRight") next();
+    });
+
+    // Minimal carousel logic
+    document.querySelectorAll("[data-carousel]").forEach((root) => {
+        const slides = root.querySelector(".slides");
+        const slideEls = Array.from(root.querySelectorAll(".slide"));
+        const prevBtn = root.querySelector(".prev");
+        const nextBtn = root.querySelector(".next");
+        const dots = Array.from(root.querySelectorAll(".dot"));
+        let index = 0;
+        let timer = null;
+        const autoplayMs = Number(root.dataset.autoplay || 0);
+
+        function go(to) {
+            index = (to + slideEls.length) % slideEls.length;
+            slides.style.transform = `translateX(${-100 * index}%)`;
+            dots.forEach((d, i) => d.classList.toggle("active", i === index));
+            resetAutoplay();
+        }
+        function next() {
+            go(index + 1);
+        }
+        function prev() {
+            go(index - 1);
+        }
+        function resetAutoplay() {
+            if (!autoplayMs) return;
+            clearInterval(timer);
+            timer = setInterval(next, autoplayMs);
+        }
+
+        nextBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            next();
+        });
+        prevBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            prev();
+        });
+        dots.forEach((d, i) =>
+            d.addEventListener("click", (e) => {
+                e.stopPropagation();
+                go(i);
+            })
+        );
+
+        // Swipe support
+        let startX = 0;
+        let dx = 0;
+        root.addEventListener("pointerdown", (e) => {
+            startX = e.clientX;
+            dx = 0;
+            root.setPointerCapture(e.pointerId);
+        });
+        root.addEventListener("pointermove", (e) => {
+            if (!startX) return;
+            dx = e.clientX - startX;
+        });
+        root.addEventListener("pointerup", (e) => {
+            if (Math.abs(dx) > 40) {
+                if (dx < 0) next();
+                else prev();
+            }
+            startX = 0;
+            dx = 0;
+        });
+
+        go(0);
+    });
+</script>
