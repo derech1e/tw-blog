@@ -469,9 +469,45 @@ hr {
 }
 
 /* ===== anchor link ===== */
+
 .anchor-link {
-	margin-left: 0.5 rem;
+	margin-left: 0.5rem;
 	color: rgb(255, 107, 1);
+	display: inline-flex; /* Statt inline – für präzisere Kontrolle */
+	align-items: center; /* Zentriert vertikal */
+	vertical-align: middle; /* Verhindert Abstand nach unten */
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+/* Optional: Feinabstimmung für das Icon selbst */
+.anchor-icon {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 0.25rem; /* Kleiner Abstand zum Text */
+}
+
+.anchor-icon svg {
+	width: 0.5em;   /* Relativ zur Schriftgröße der Überschrift */
+	height: 0.5em;  /* Behält das Seitenverhältnis bei */
+	margin-left: 0.1rem; /* Leicht angepasster Abstand zum Text */
+}
+
+h1:hover .anchor-link,
+h2:hover .anchor-link,
+h3:hover .anchor-link {
+	opacity: 1;
+}
+
+@media (max-width: 768px) {
+	.anchor-link {
+		opacity: 0.7; /* Subtiler bei Touch-Geräten */
+		transition: opacity 0.2s;
+	}
+	h2:hover .anchor-link,
+	h3:hover .anchor-link {
+		opacity: 1; /* Nur bei Hover sichtbar */
+	}
 }
 
 /* Optional: respect users who prefer reduced motion */

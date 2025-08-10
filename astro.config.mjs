@@ -15,13 +15,12 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com',
+  site: 'https://nuer.me',
   integrations: [mdx(), sitemap(), react()],
 
   markdown: {
     rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, autolinkConfig]],
   },
-
   adapter: vercel({
     edgeMiddleware: true,
     imageService: true,
