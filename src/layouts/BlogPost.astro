@@ -20,7 +20,6 @@ const { slug } = Astro.params;
 		main {
 			width: calc(100% - 2em);
 			max-width: 100%;
-			margin: 0;
 		}
 		.hero-image {
 			width: 100%;
@@ -35,7 +34,6 @@ const { slug } = Astro.params;
 			width: 720px;
 			max-width: calc(100% - 2em);
 			margin: auto;
-			padding: 1em;
 			color: rgb(var(--gray-dark));
 		}
 		.title {
@@ -72,7 +70,7 @@ const { slug } = Astro.params;
 				/>
 			)}
 		</div>
-		<div class="prose">
+		<div class="prose md:p-4">
 			<div class="title">
 				<div class="date" transition:name={`date-${slug}`}>
 					<FormattedDate date={pubDate} />
