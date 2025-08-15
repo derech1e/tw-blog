@@ -366,15 +366,14 @@ export default function Comments({ postId }: { postId: string }) {
 
     CommentCard.displayName = "CommentCard";
 
+
     return (
         <section
-            className="mx-auto my-10 w-full max-w-3xl rounded-2xl border
-                 border-gray-200 bg-white/80 p-6 shadow-xl backdrop-blur"
+            className="mx-auto w-full max-w-3xl backdrop-blur"
         >
             <div className="mb-6 flex items-center justify-between">
                 <h2
-                    className="flex items-center gap-2 text-xl font-semibold
-                       text-gray-900"
+                    className="mb-4 py-4 text-center leading-none"
                 >
                     Kommentare
                 </h2>
@@ -467,7 +466,7 @@ export default function Comments({ postId }: { postId: string }) {
                         disabled={isSubmitting}
                         className="inline-flex items-center rounded-lg bg-[#2337ff]
                        px-4 py-2 font-semibold text-white shadow transition
-                       hover:bg-[#000d8a] disabled:opacity-60"
+                       hover:bg-[#000d8a] disabled:opacity-60 hover:cursor-pointer"
                     >
                         {isSubmitting
                             ? "Senden…"
