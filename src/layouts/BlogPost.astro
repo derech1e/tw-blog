@@ -9,7 +9,7 @@ import Comments from "../components/Comments";
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, enableComments } = Astro.props;
 const { slug } = Astro.params;
 ---
 
@@ -90,7 +90,9 @@ const { slug } = Astro.params;
 		</div>
 
 		<!-- Kommentare direkt unterhalb des Inhalts -->
-		<Comments postId={slug} client:load />
+		{enableComments && (
+			<Comments postId={slug} client:load />
+		)}
 	</article>
 </main>
 <Footer />
