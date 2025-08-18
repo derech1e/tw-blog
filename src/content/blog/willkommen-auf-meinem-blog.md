@@ -3,6 +3,7 @@ title: 'Willkommen auf meinem Blog'
 description: 'Begrüßungswort für meinen neuen Blog'
 pubDate: 'Aug 18 2025'
 heroImage: '../../assets/blog-placeholder-2.jpg'
+hidden: false
 ---
 
 # Willkommen auf meinem Blog!
