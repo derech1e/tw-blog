@@ -19,5 +19,4 @@ matrix:
       - '**/*.mdx'
       - '**/*.txt'
       - '**/*.rst'
-      - '**/*.astro'
     default_encoding: utf-8
