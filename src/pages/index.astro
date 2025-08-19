@@ -2,62 +2,84 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import {SITE_DESCRIPTION, SITE_TITLE} from '../consts';
+import Layout from "../layouts/BlogPost.astro";
 
 const greetings = [
-    { emoji: "🧑‍🚀", phrase: "Zukunftsgestalter" },
-    { emoji: "🧑‍💻", phrase: "Problemlöser" },
-    { emoji: "🧑‍🎨", phrase: "Kreative Seele" },
-    { emoji: "🧑‍🔬", phrase: "Entdecker" },
-    { emoji: "🧑‍🍳", phrase: "Genussbereiter" },
-    { emoji: "🧑‍🏫", phrase: "Wissensvermittler" },
-    { emoji: "🧑‍🚒", phrase: "Held" },
-    { emoji: "🧑‍⚕️", phrase: "Lebensretter" },
-    { emoji: "🧑‍✈️", phrase: "Horizonteroberer" },
-    { emoji: "🧑‍🌾", phrase: "Wachstumsbringer" },
-    { emoji: "🧑‍⚖️", phrase: "Gerechtigkeitswächter" },
-    { emoji: "👷", phrase: "Schöpfer" },
-    { emoji: "🕵️", phrase: "Wahrheitsfinder" },
-    { emoji: "🧑‍🚀", phrase: "Grenzenlose Entdecker" },
-    { emoji: "🧑‍🔧", phrase: "Technikbegeisterter" },
-    { emoji: "🧑‍🌾", phrase: "Naturverbundener" },
-    { emoji: "🧑‍🏭", phrase: "Produktionsprofi" },
-    { emoji: "🧑‍💼", phrase: "Geschäftstüchtiger" },
-    { emoji: "🧑‍🎤", phrase: "Kreative Seele" },
-    { emoji: "🧑‍💼", phrase: "Magier" }
+    {emoji: "🧑‍🚀", phrase: "Zukunftsgestalter"},
+    {emoji: "🧑‍💻", phrase: "Problemlöser"},
+    {emoji: "🧑‍🎨", phrase: "Kreative Seele"},
+    {emoji: "🧑‍🔬", phrase: "Entdecker"},
+    {emoji: "🧑‍🍳", phrase: "Genussbereiter"},
+    {emoji: "🧑‍🏫", phrase: "Wissensvermittler"},
+    {emoji: "🧑‍🚒", phrase: "Held"},
+    {emoji: "🧑‍⚕️", phrase: "Lebensretter"},
+    {emoji: "🧑‍✈️", phrase: "Horizonteroberer"},
+    {emoji: "🧑‍🌾", phrase: "Wachstumsbringer"},
+    {emoji: "🧑‍⚖️", phrase: "Gerechtigkeitswächter"},
+    {emoji: "👷", phrase: "Schöpfer"},
+    {emoji: "🕵️", phrase: "Wahrheitsfinder"},
+    {emoji: "🧑‍🚀", phrase: "Grenzenlose Entdecker"},
+    {emoji: "🧑‍🔧", phrase: "Technikbegeisterter"},
+    {emoji: "🧑‍🌾", phrase: "Naturverbundener"},
+    {emoji: "🧑‍💼", phrase: "Geschäftstüchtiger"},
+    {emoji: "🧑‍🎤", phrase: "Kreative Seele"},
+    {emoji: "🧑‍💼", phrase: "Magier"},
+    {emoji: "👑", phrase: "Mario Kart Legende"},
 ];
 
-const randomIndex = Math.floor(Math.random() * greetings.length);
-const { emoji, phrase } = greetings[randomIndex];
+const greetingParam = Astro.url.searchParams.get("greeting");
+let index = parseInt(greetingParam ?? "", 10);
+
+// validate index or fallback
+if (isNaN(index) || index < 0 || index >= greetings.length) {
+    index = Math.floor(Math.random() * greetings.length);
+}
+
+const {emoji, phrase} = greetings[index];
 export const prerender = false;
 ---
 
 <!doctype html>
 <html lang="de">
 <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION}/>
     <style>
         .fade-in {
             opacity: 0;
             animation: fadeIn 0.5s ease-in-out forwards;
         }
+
         @keyframes fadeIn {
             to {
                 opacity: 1;
             }
         }
+
         .wave {
             display: inline-block;
             animation: wave 1.8s infinite;
             transform-origin: 70% 70%;
         }
+
         @keyframes wave {
-            0%, 60%, 100% { transform: rotate(0deg); }
-            10%, 30% { transform: rotate(18deg); }
-            20% { transform: rotate(-8deg); }
-            40% { transform: rotate(4deg); }
-            50% { transform: rotate(-4deg); }
+            0%, 60%, 100% {
+                transform: rotate(0deg);
+            }
+            10%, 30% {
+                transform: rotate(18deg);
+            }
+            20% {
+                transform: rotate(-8deg);
+            }
+            40% {
+                transform: rotate(4deg);
+            }
+            50% {
+                transform: rotate(-4deg);
+            }
         }
+
         .highlight {
             background: linear-gradient(90deg, #ffe082 40%, #ffd54f 100%);
             border-radius: 0.4em;
@@ -67,7 +89,7 @@ export const prerender = false;
     </style>
 </head>
 <body>
-<Header />
+<Header/>
 <main>
     <h1>{emoji} Hallo, {phrase}!</h1>
     <div class="fade-in" style="animation-delay:0.2s; animation-fill-mode:both;">
@@ -77,20 +99,33 @@ export const prerender = false;
         </p>
         <p>
             <span>Willkommen auf meinem Blog</span> über mein Auslandssemester in <b>Taiwan 2025/2026</b>!
-            Ich werde an der <a href="https://nthu-en.site.nthu.edu.tw/" target="_blank" rel="noopener">National Tsing Hua University (NTHU)</a> in Hsinchu <b>Informatik</b> studieren.
+            Ich werde an der <a href="https://nthu-en.site.nthu.edu.tw/" target="_blank" rel="noopener">National Tsing
+            Hua University (NTHU)</a> in Hsinchu <b>Informatik</b> studieren.
         </p>
         <p>
-            Hier möchte ich einige Einblicke in das Leben und Studieren in Taiwan, von <b>Abenteuern</b> über <b>kulturelle Entdeckungen</b> bis hin zu meinem <b>Uni-Alltag</b> geben.
+            Dies ist mein eigenes entwickelter Blog, in dem ich meine Erlebnisse, Gedanken und Erfahrungen während
+            meines Auslandssemesters festhalten möchte. Neben einem <a href="https://newsletter.nuerk.me">Newsletter</a>
+            der euch über die neuesten Beiträge informiert, könnt ihr mir auch gerne einige Kommentare unter den
+            Beiträgen hinterlassen, um mir Feedback zu geben oder Fragen zu stellen.
         </p>
         <p>
-            Du möchtest mehr über mich erfahren? Dann schau gerne auf meiner <a href="/about">Über mich</a> Seite vorbei!
+            Für Private Nachrichten oder Anfragen könnt ihr mir gerne per Mail an <a href="mailto:thomas@nuerk.me">thomas@nuerk.me</a>
+            oder allen anderen bekannten Kanälen schreiben.
+        </p>
+
+        <p>
+            Ob das hier so funktionieren wird wie ich es mir vorstelle, wird sich zeigen. Ich gebe mein Bestes! 👀
+        </p>
+
+        <p><span class="highlight">
+            Viel Spaß beim Lesen und Stöbern!
+             </span>
         </p>
         <p>
-            Ob ich ein guter Autor bin? Naja, dass wird die Zukunft zeigen. <br>
-            Viel Spaß beim Lesen und Mitreisen!
+            ~ Thomas
         </p>
     </div>
 </main>
-<Footer />
+<Footer/>
 </body>
 </html>
