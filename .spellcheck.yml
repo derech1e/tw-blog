@@ -1,0 +1,23 @@
+matrix:
+  - name: Spellcheck
+    aspell:
+      lang: de
+      d: de_DE
+    dictionary:
+      wordlists:
+        - .wordlist.txt
+      encoding: utf-8
+    pipeline:
+      - pyspelling.filters.markdown:
+      - pyspelling.filters.html:
+          comments: false
+          ignores:
+            - code
+            - pre
+    sources:
+      - '**/*.md'
+      - '**/*.mdx'
+      - '**/*.txt'
+      - '**/*.rst'
+      - '**/*.astro'
+    default_encoding: utf-8
