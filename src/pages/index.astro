@@ -26,6 +26,10 @@ const greetings = [
     {emoji: "🧑‍🎤", phrase: "Kreative Seele"},
     {emoji: "🧑‍💼", phrase: "Magier"},
     {emoji: "👑", phrase: "Mario Kart Legende"},
+    {emoji: "💗", phrase: "allerbeste Mama"},
+    {emoji: "💗", phrase: "allerbester Papa"},
+    {emoji: "❤️", phrase: "liebes Schwesterherz"},
+    {emoji: "🚀", phrase: "bester Erklärer"},
 ];
 
 const greetingParam = Astro.url.searchParams.get("greeting");
@@ -34,7 +38,11 @@ let index = parseInt(greetingParam ?? "", 10);
 // validate index or fallback
 if (isNaN(index) || index < 0 || index >= greetings.length) {
     index = Math.floor(Math.random() * greetings.length);
+    if(index >= 19) {
+        index = 0;
+    }
 }
+
 
 const {emoji, phrase} = greetings[index];
 export const prerender = false;
