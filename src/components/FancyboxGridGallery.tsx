@@ -47,11 +47,10 @@ export default function FancyboxGridGallery({
                                                 className = "",
                                             }: FancyboxGridGalleryProps) {
     const [fancyboxRef] = useFancybox(options);
-
     const gridStyle = {
         display: "grid",
-        gridTemplateRows: `repeat(${rows}, minmax(${minItemHeight}, 1fr))`,
         gridTemplateColumns: `repeat(${cols}, 1fr)`,
+        gridAutoRows: "1fr", // base row height flexible
         gap: gap,
     };
 
@@ -74,9 +73,29 @@ export default function FancyboxGridGallery({
                         gridColumn: image.colSpan
                             ? `${image.col} / span ${image.colSpan}`
                             : image.col,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                     }}
                 >
-                    <img src={image.thumb} alt={image.alt} />
+                    <div
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            aspectRatio: "2 / 1", // keeps image near square
+                            overflow: "hidden",
+                        }}
+                    >
+                        <img
+                            src={image.thumb}
+                            alt={image.alt}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                            }}
+                        />
+                    </div>
                 </a>
             ))}
         </div>

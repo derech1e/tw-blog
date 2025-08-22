@@ -35,6 +35,6 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
-    assetsInclude: ["**/*.HEIC"],
+    assetsInclude: ["**/*.HEIC", "**/*.jpeg"],
   }
 });

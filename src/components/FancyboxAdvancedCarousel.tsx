@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+"use client";
+import { useState, useRef, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectCoverflow, Pagination, Navigation } from "swiper/modules";
 import { type FancyboxOptions, Fancybox } from "@fancyapps/ui/dist/fancybox/";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
@@ -51,62 +51,19 @@ export default function FancyboxAdvancedCarousel({
     const [currentSlide, setCurrentSlide] = useState(0);
     const [progress, setProgress] = useState(0);
     const swiperRef = useRef<any>(null);
-    const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
-    const startProgressAnimation = () => {
-        if (progressIntervalRef.current) {
-            clearInterval(progressIntervalRef.current);
-        }
-
-        setProgress(0);
-        const startTime = Date.now();
-
-        progressIntervalRef.current = setInterval(() => {
-            const elapsed = Date.now() - startTime;
-            const newProgress = (elapsed / autoplayDelay) * 100;
-
-            if (newProgress >= 100) {
-                setProgress(100);
-                if (progressIntervalRef.current) {
-                    clearInterval(progressIntervalRef.current);
-                }
-            } else {
-                setProgress(newProgress);
-            }
-        }, 16); // ~60fps updates
-    };
-
-    useEffect(() => {
-        startProgressAnimation();
-
-        return () => {
-            if (progressIntervalRef.current) {
-                clearInterval(progressIntervalRef.current);
-            }
-        };
-    }, [currentSlide, autoplayDelay]);
 
     const handleSlideChange = (swiper: any) => {
-        setCurrentSlide(swiper.activeIndex);
-    };
-
-    const goToSlide = (index: number) => {
-        if (swiperRef.current) {
-            swiperRef.current.slideTo(index);
-        }
+        setCurrentSlide(swiper.realIndex); // realIndex avoids loop duplicates
     };
 
     return (
-        <div
-            ref={fancyboxRef}
-            className={`advanced-carousel-container ${className}`}
-        >
+        <div ref={fancyboxRef} className={`advanced-carousel-container ${className}`}>
             <div className="carousel-wrapper" style={{ height }}>
                 <Swiper
                     onSwiper={(swiper: any) => (swiperRef.current = swiper)}
                     effect="coverflow"
-                    grabCursor={true}
-                    centeredSlides={true}
+                    grabCursor
+                    centeredSlides
                     slidesPerView="auto"
                     coverflowEffect={{
                         rotate: 15,
@@ -118,14 +75,12 @@ export default function FancyboxAdvancedCarousel({
                     autoplay={{
                         delay: autoplayDelay,
                         disableOnInteraction: false,
-                        reverseDirection: false,
                     }}
-                    loop={true}
+                    loop={images.length > 2} // 🔑 disable loop if only 2 slides
                     modules={[EffectCoverflow, Autoplay, Pagination, Navigation]}
                     onSlideChange={handleSlideChange}
-                    onAutoplayTimeLeft={() => {
-                        // Reset progress when autoplay advances
-                        startProgressAnimation();
+                    onAutoplayTimeLeft={(_, time, progress) => {
+                        setProgress(progress * 100); // 🔑 native Swiper progress
                     }}
                     className="advanced-swiper"
                 >
@@ -137,11 +92,14 @@ export default function FancyboxAdvancedCarousel({
                                     href={image.src}
                                     className="slide-link"
                                 >
-                                    <img src={image.thumb} alt={image.alt} className="slide-image" />
+                                    <img
+                                        src={image.thumb}
+                                        alt={image.alt}
+                                        className="slide-image"
+                                    />
                                     <div className="slide-overlay">
                                         <div className="slide-info">
-                                            {image.title && <h3>{image.title}</h3>}
-                                            <p>Click to view full size</p>
+                                            {image.title && <h3 className="text-white">{image.title}</h3>}
                                         </div>
                                     </div>
                                 </a>
@@ -171,7 +129,7 @@ export default function FancyboxAdvancedCarousel({
                 </button>
             </div>
 
-            {/* Custom Pagination Dots with Progress */}
+            {/* Pagination with progress */}
             <div className="carousel-pagination">
                 {images.map((_, index) => (
                     <button
@@ -179,14 +137,11 @@ export default function FancyboxAdvancedCarousel({
                         className={`pagination-dot ${
                             index === currentSlide ? "active" : ""
                         }`}
-                        onClick={() => goToSlide(index)}
+                        onClick={() => swiperRef.current?.slideToLoop(index)}
                         aria-label={`Go to slide ${index + 1}`}
                     >
                         {index === currentSlide && (
-                            <div
-                                className="progress-fill"
-                                style={{ width: `${progress}%` }}
-                            />
+                            <div className="progress-fill" style={{ width: `${progress}%` }} />
                         )}
                     </button>
                 ))}
