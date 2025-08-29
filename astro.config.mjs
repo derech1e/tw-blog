@@ -15,7 +15,7 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://nuer.me',
+  site: 'https://blog.nuer.me',
   integrations: [mdx(), sitemap(), react()],
 
   markdown: {
@@ -30,6 +30,9 @@ export default defineConfig({
     },
     maxDuration: 8
   }),
+  image: {
+    domains: ['7bd63f5b50a7ddf2cf2040355fc00508.r2.cloudflarestorage.com', '7bd63f5b50a7ddf2cf2040355fc00508.r2.cloudflarestorage.com/blog', 'r2os.nuerk.me']
+  },
 
   output: 'static',
 
