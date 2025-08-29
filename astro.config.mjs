@@ -31,7 +31,7 @@ export default defineConfig({
     maxDuration: 8
   }),
 
-  output: 'static',
+  output: 'server',
 
   vite: {
     plugins: [tailwindcss()],
