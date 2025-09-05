@@ -1,6 +1,6 @@
 {
   "images": {
-    "domains": ["r2os.nuerk.me"],
+    "domains": ["r2os.nuerk.me", "localhost", "pub-864151273e56487fba37a0db4f56b69f.r2.dev"],
     "sizes": [320, 640, 828, 1080, 1200, 1920, 2048, 3840]
   }
 }

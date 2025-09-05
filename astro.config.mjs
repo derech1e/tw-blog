@@ -31,7 +31,7 @@ export default defineConfig({
     maxDuration: 8
   }),
   image: {
-    domains: ['7bd63f5b50a7ddf2cf2040355fc00508.r2.cloudflarestorage.com', '7bd63f5b50a7ddf2cf2040355fc00508.r2.cloudflarestorage.com/blog', 'r2os.nuerk.me']
+    domains: ['7bd63f5b50a7ddf2cf2040355fc00508.r2.cloudflarestorage.com', '7bd63f5b50a7ddf2cf2040355fc00508.r2.cloudflarestorage.com/blog', 'r2os.nuerk.me', 'localhost', 'pub-864151273e56487fba37a0db4f56b69f.r2.dev']
   },
 
   output: 'static',
