@@ -4,7 +4,7 @@ import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 interface ImageData {
     src: string;
-    thumb: string;
+    thumb: string | undefined;
     alt: string;
 }
 
@@ -44,7 +44,7 @@ export default function FancyboxGallery({
                         href={image.src}
                         className="gallery-item"
                     >
-                        <img src={image.thumb} alt={image.alt} />
+                        <img src={image.src} alt={image.alt} />
                     </a>
                 ))}
             </div>
