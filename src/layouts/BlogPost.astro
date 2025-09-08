@@ -9,7 +9,7 @@ import Comments from "../components/Comments";
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage, enableComments } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, enableComments, location } = Astro.props;
 const { slug } = Astro.params;
 ---
 
@@ -60,6 +60,7 @@ const { slug } = Astro.params;
 <main>
 	<article>
 		<div class="hero-image">
+			<span class="prose md:p-4 title date flex flex-col items-center justify-center">{location}</span>
 			{heroImage && (
 				<Image
 					width={1020}
