@@ -125,7 +125,7 @@ const posts = (await getCollection('blog')).filter(blog => !blog.data.hidden).so
 							<li>
 								<a href={`/blog/${post.id}/`}>
 									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt=""
+										<Image width={1920} height={360} src={post.data.heroImage} alt=""
 											   transition:name={`hero-${post.id}`} />
 									)}
 									<h4 class="title" transition:name={`title-${post.id}`}>{post.data.title}</h4>
