@@ -27,7 +27,7 @@
     "react-dom": "^19.2.0",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
-    "sharp": "^0.35.0",
+    "sharp": "^0.35.4",
     "swiper": "^12.0.2",
     "tailwindcss": "^4.1.14"
   }
